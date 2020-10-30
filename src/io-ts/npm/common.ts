@@ -1,5 +1,5 @@
 import { pipe } from "fp-ts/lib/function"
-import * as t from "io-ts/Decoder"
+import * as t from "io-ts/Codec"
 import { recordString } from "../utils"
 
 export const url = t.type({

@@ -1,5 +1,5 @@
 import { pipe } from "fp-ts/lib/function"
-import * as t from "io-ts/Decoder"
+import * as t from "io-ts/Codec"
 import { recordString } from "../utils"
 import * as abbr from "./abbreviated"
 import { time, human, url, repository } from "./common"

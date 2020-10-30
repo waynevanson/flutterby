@@ -1,5 +1,6 @@
 import { pipe } from "fp-ts/lib/function"
-import * as t from "io-ts/Decoder"
+import * as t from "io-ts/Codec"
+import * as d from "io-ts/Decoder"
 import { recordString } from "../utils"
 import { dist, distTags } from "./common"
 
@@ -23,7 +24,10 @@ export const version = pipe(
       bundleDependencies: t.UnknownArray,
       peerDependencies: recordString,
       bin: recordString,
-      directories: t.union(t.UnknownArray, t.UnknownRecord),
+      directories: pipe(
+        d.union(t.UnknownArray, t.UnknownRecord),
+        t.fromDecoder
+      ),
       engines: recordString,
       _hasShrinkwrap: t.boolean,
     })

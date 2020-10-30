@@ -18,3 +18,6 @@ We expose an indexed monad
 read config, read history from git, github and npm. These can be abstracted out later
 sync versions
 do as much update validation as possible
+
+name,
+codecs, api

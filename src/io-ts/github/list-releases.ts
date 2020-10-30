@@ -2,9 +2,9 @@
 // https://api.github.com/repos/waynevanson/dom-ts
 // 200 or 404
 // github/codecs|fetchers
-import * as t from "io-ts/Decoder"
+import { pipe } from "fp-ts/lib/function"
+import * as t from "io-ts/Codec"
 
-// do me
 export type Owner = t.TypeOf<typeof Owner>
 export const Owner = t.type({
   login: t.string,
@@ -27,21 +27,8 @@ export const Owner = t.type({
   site_admin: t.boolean,
 })
 
-/**
- * @see `https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#list-releases`
- */
-export type Release = t.TypeOf<typeof Release>
-export const Release = t.type({
-  id: t.number,
-  node_id: t.string,
-  name: t.string,
-  full_name: t.string,
-  private: t.boolean,
-  owner: Owner,
-  html_url: t.string,
-  url: t.string,
-  description: t.string,
-  fork: t.boolean,
+export type ReleaseUrl = t.TypeOf<typeof ReleaseUrl>
+export const ReleaseUrl = t.type({
   forks_url: t.string,
   keys_url: t.string,
   collaborators_url: t.string,
@@ -85,33 +72,56 @@ export const Release = t.type({
   ssh_url: t.string,
   clone_url: t.string,
   svn_url: t.string,
-  homepage: t.string,
-  size: t.number,
-  stargazers_count: t.number,
-  watchers_count: t.number,
-  language: t.string,
-  has_issues: t.boolean,
-  has_projects: t.boolean,
-  has_downloads: t.boolean,
-  has_wiki: t.boolean,
-  has_pages: t.boolean,
-  forks_count: t.number,
+  html_url: t.string,
   mirror_url: t.nullable(t.string),
-  archived: t.boolean,
-  disabled: t.boolean,
-  open_issues_count: t.number,
-  license: t.type({
-    key: t.string,
-    name: t.string,
-    spdx_id: t.string,
-    url: t.string,
-    node_id: t.string,
-  }),
-  forks: t.number,
-  open_issues: t.number,
-  watchers: t.number,
-  default_branch: t.string,
-  temp_clone_token: t.nullable(t.string),
-  network_count: t.number,
-  subscribers_count: t.number,
 })
+
+export type License = t.TypeOf<typeof License>
+export const License = t.type({
+  key: t.string,
+  name: t.string,
+  spdx_id: t.string,
+  url: t.string,
+  node_id: t.string,
+})
+
+/**
+ * @see `https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#list-releases`
+ */
+export type Release = t.TypeOf<typeof Release>
+export const Release = pipe(
+  t.type({
+    id: t.number,
+    node_id: t.string,
+    name: t.string,
+    full_name: t.string,
+    private: t.boolean,
+    owner: Owner,
+    url: t.string,
+    description: t.string,
+    fork: t.boolean,
+    homepage: t.string,
+    size: t.number,
+    stargazers_count: t.number,
+    watchers_count: t.number,
+    language: t.string,
+    has_issues: t.boolean,
+    has_projects: t.boolean,
+    has_downloads: t.boolean,
+    has_wiki: t.boolean,
+    has_pages: t.boolean,
+    forks_count: t.number,
+    archived: t.boolean,
+    disabled: t.boolean,
+    open_issues_count: t.number,
+    license: License,
+    forks: t.number,
+    open_issues: t.number,
+    watchers: t.number,
+    default_branch: t.string,
+    temp_clone_token: t.nullable(t.string),
+    network_count: t.number,
+    subscribers_count: t.number,
+  }),
+  t.intersect(ReleaseUrl)
+)
