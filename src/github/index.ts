@@ -9,3 +9,9 @@ export interface Options {
    */
   endpoint: string
 }
+
+export const headers: HeadersInit = {
+  accept: "application/vnd.github.v3+json",
+}
+
+export * as repos from "./repos"

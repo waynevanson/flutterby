@@ -1,10 +1,15 @@
+// This module represents the API
 // https://api.github.com/repos/waynevanson/dom-ts
 // 200 or 404
-import { pipe } from "fp-ts/lib/function"
+import { reader as R, readerTaskEither as RTE } from "fp-ts"
+import * as string from "fp-ts-std/lib/String"
+import { flow, pipe } from "fp-ts/lib/function"
+import { fetch } from "../../util"
+import { Options, headers } from "../index"
 import * as c from "io-ts/Codec"
 
-export type Owner = c.TypeOf<typeof Owner>
-export const Owner = c.type({
+export type User = c.TypeOf<typeof User>
+export const User = c.type({
   login: c.string,
   id: c.number,
   node_id: c.string,
@@ -91,7 +96,7 @@ export const Repository = pipe(
     name: c.string,
     full_name: c.string,
     private: c.boolean,
-    owner: Owner,
+    owner: User,
     url: c.string,
     description: c.string,
     fork: c.boolean,
@@ -120,3 +125,40 @@ export const Repository = pipe(
   }),
   c.intersect(URLS)
 )
+
+export type RepositoryParams = {
+  /**
+   * @summary
+   * The owner of the repository
+   */
+  owner: string
+
+  /**
+   * @summary
+   * The name of the repository
+   */
+  name: string
+}
+
+export const requestInit: RequestInit = {
+  method: "GET",
+  headers,
+}
+
+export function url({
+  name,
+  owner,
+}: RepositoryParams): R.Reader<Options, string> {
+  return pipe(
+    R.asks(({ endpoint }) => endpoint),
+    R.map(string.append(`/${owner}/${name}`))
+  )
+}
+
+export const request = flow(
+  url,
+  R.map(fetch(requestInit)),
+  RTE.chainEitherKW(Repository.decode)
+)
+
+export * as releases from "./releases"

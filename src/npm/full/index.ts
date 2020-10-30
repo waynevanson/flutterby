@@ -1,14 +1,16 @@
-import { pipe } from "fp-ts/lib/function"
+import { pipe, flow } from "fp-ts/lib/function"
 import * as t from "io-ts/Codec"
-import { recordString } from "../utils"
-import * as abbr from "./abbreviated"
-import { time, human, url, repository } from "./common"
-
+import { Options } from ".."
+import * as abbr from "../abbreviated"
+import { human, recordString, time, repository, Url } from "../common"
+import { reader as R, readerTaskEither as RTE } from "fp-ts"
+import * as string from "fp-ts-std/lib/String"
+import { fetch } from "../../util"
 // VERSION
 
 export const versionHoisted = t.partial({
   author: human,
-  bugs: url,
+  bugs: Url,
   contributors: t.array(human),
   description: t.string,
   homepage: t.string,
@@ -35,7 +37,7 @@ export const version = pipe(
       _nodeVersion: t.string,
     })
   ),
-  t.intersect(abbr.version),
+  t.intersect(abbr.Version),
   t.intersect(versionHoisted),
   t.intersect(t.UnknownRecord)
 )
@@ -61,10 +63,31 @@ export const metadataTopLevel = pipe(
 /**
  * @see [Source](https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md#full-metadata-format)
  */
-export const metadata = pipe(
+export const Metadata = pipe(
   t.UnknownRecord,
-  t.intersect(abbr.metadata),
+  t.intersect(abbr.Metadata),
   t.intersect(metadataTopLevel),
   t.intersect(versionHoisted)
 )
-export type metadata = t.TypeOf<typeof metadata>
+export type Metadata = t.TypeOf<typeof Metadata>
+
+export type MetadataParams = {
+  name: string
+}
+
+export function url({ name }: MetadataParams): R.Reader<Options, string> {
+  return pipe(
+    R.asks(({ endpoint }) => endpoint),
+    R.map(string.append(`/${name}`))
+  )
+}
+
+const requestInit: RequestInit = {
+  method: "GET",
+}
+
+export const request = flow(
+  url,
+  R.map(fetch(requestInit)),
+  RTE.chainEitherKW(Metadata.decode)
+)
