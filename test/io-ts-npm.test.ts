@@ -1,18 +1,13 @@
-import { either as E, taskEither as TE } from "fp-ts"
+import { either as E } from "fp-ts"
 import * as freedom from "../src/query"
-import { metadata } from "../src/io-ts/npm/full"
-import * as u from "util"
+import { NPM_REGISTRY_URL } from "../src"
 
 describe("npm", () => {
-  test("queryPackageNPM", async () => {
-    const result = await freedom.queryPackageNPM({
+  test("/package", async () => {
+    const result = await freedom.queryNPM({
       name: "dom-ts",
-    })()
+    })({ endpoint: NPM_REGISTRY_URL })()
 
-    console.log(u.inspect({ result }, { depth: 20, colors: true }))
-
-    expect(result).toMatchObject(
-      E.right({ name: "dom-ts" } as Partial<metadata>)
-    )
+    expect(result).toMatchObject(E.right({}))
   })
 })

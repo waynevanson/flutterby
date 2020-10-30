@@ -1,20 +1,17 @@
 import { either as E, taskEither as TE } from "fp-ts"
 import * as query from "../src/query"
+import { GITHUB_RELEASES_URL } from "../src"
+import * as util from "util"
 
 describe("github", () => {
-  test("queryPackageNPM", async () => {
+  test("List Releases", async () => {
     const result = await query.queryReleasesGithub({
+      name: "dom-ts",
       owner: "waynevanson",
-      repo: "dom-ts",
-    })()
-    expect(result).toMatchObject(E.right({}))
-  })
+    })({ endpoint: GITHUB_RELEASES_URL })()
 
-  test.skip("type checks corectly", async () => {
-    const result = await TE.tryCatch(
-      () => import("../src/io-ts/npm"),
-      (e) => e as Error
-    )()
+    // console.log(util.inspect(result, { colors: true, depth: 20 }))
+
     expect(result).toMatchObject(E.right({}))
   })
 })
