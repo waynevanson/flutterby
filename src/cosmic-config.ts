@@ -52,3 +52,6 @@ export const cosmiconfig = (config?: cc.Options) => (
       ),
   }
 }
+
+export const search = (config?: cc.Options) => (moduleName: string) =>
+  cosmiconfig(config)(moduleName).search()
