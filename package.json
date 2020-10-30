@@ -19,6 +19,7 @@
     "@types/node": "^14.14.6",
     "@types/semver": "^7.3.4",
     "docs-ts": "^0.5.2",
+    "fp-ts-std": "^0.5.0",
     "jest": "^26.6.1",
     "prettier": "^2.1.2",
     "ts-jest": "^26.4.3",
