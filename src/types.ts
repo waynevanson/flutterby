@@ -1,4 +1,4 @@
-export type Semver = Record<"major" | "minor" | "patch", string>
+export type Semver = Record<"major" | "minor" | "patch", number>
 
 export interface Version {
   raw: string

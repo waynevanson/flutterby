@@ -3,6 +3,12 @@
   "description": "Deploy your project to a registry without the hassle",
   "homepage": "https://waynevanson.github.io/flutterby",
   "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "npm-run-all --parallel build:*",
+    "build:bin": "tsc -p tsconfig.bin.json",
+    "build:lib": ""
+  },
   "dependencies": {
     "cosmiconfig": "^7.0.0",
     "cross-fetch": "^3.0.6",

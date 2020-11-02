@@ -9,7 +9,7 @@ export interface Result {
   clearCaches: IO.IO<void>
   clearLoadCache: IO.IO<void>
   clearSearchCache: IO.IO<void>
-  load: (filePath?: string) => TE.TaskEither<Error, CosmicconfigResult>
+  load: (filePath: string) => TE.TaskEither<Error, CosmicconfigResult>
   search: (searchFrom?: string) => TE.TaskEither<Error, CosmicconfigResult>
 }
 
@@ -54,4 +54,4 @@ export const cosmiconfig = (config?: cc.Options) => (
 }
 
 export const search = (config?: cc.Options) => (moduleName: string) =>
-  cosmiconfig(config)(moduleName).search()
+  cosmiconfig(config)(moduleName).search
