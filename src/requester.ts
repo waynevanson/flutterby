@@ -1,8 +1,11 @@
-import { reader as R, readerTaskEither as RTE } from "fp-ts"
+import { option as O, reader as R, readerTaskEither as RTE } from "fp-ts"
 import { pipe } from "fp-ts/lib/pipeable"
 import * as c from "io-ts/Codec"
 import { fetch } from "./util"
 import * as d from "io-ts/Decoder"
+import * as url from "./url"
+
+pipe(url.href(""), url.password(""))
 
 // https://nodejs.org/api/url.html#url_url_strings_and_url_objects
 /**
